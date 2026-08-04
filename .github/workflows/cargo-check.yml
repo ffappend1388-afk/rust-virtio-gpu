@@ -1,0 +1,48 @@
+name: Cargo Check Report
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cargo-check:
+    name: Run cargo check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run cargo check
+        id: check
+        continue-on-error: true
+        run: |
+          cargo check 2>&1 | tee cargo-check-output.txt
+
+      - name: Create report
+        run: |
+          echo "# Cargo Check Report" > cargo-check-report.md
+          echo "" >> cargo-check-report.md
+          echo "Commit: $GITHUB_SHA" >> cargo-check-report.md
+          echo "Date: $(date -u)" >> cargo-check-report.md
+          echo "" >> cargo-check-report.md
+          echo '```text' >> cargo-check-report.md
+          cat cargo-check-output.txt >> cargo-check-report.md
+          echo '```' >> cargo-check-report.md
+
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cargo-check-report.md
+          git diff --cached --quiet || git commit -m "ci: update cargo check report"
+          git push
