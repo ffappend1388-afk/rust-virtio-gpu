@@ -1,0 +1,30 @@
+# Rust
+/target/
+
+# Cargo backup
+**/*.rs.bk
+
+# IDE
+.vscode/
+.idea/
+
+# Vim
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# Temporary
+tmp/
+temp/

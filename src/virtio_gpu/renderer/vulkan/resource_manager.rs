@@ -1,0 +1,31 @@
+use std::collections::HashMap;
+
+use crate::virtio_gpu::resource::ResourceId;
+
+use super::{
+    Image,
+    DeviceMemory,
+};
+
+pub struct GpuTexture {
+
+    pub image: Image,
+
+    pub memory: DeviceMemory,
+}
+
+pub struct ResourceManager {
+
+    textures: HashMap<ResourceId, GpuTexture>,
+}
+
+impl ResourceManager {
+
+    pub fn new() -> Self {
+
+        Self {
+
+            textures: HashMap::new(),
+        }
+    }
+}
